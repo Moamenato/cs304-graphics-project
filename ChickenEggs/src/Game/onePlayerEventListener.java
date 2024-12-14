@@ -5,9 +5,11 @@ import com.sun.opengl.util.GLUT;
 
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
-
+import java.util.List;
 
 public class onePlayerEventListener implements GLEventListener, KeyListener {
     public boolean stop;
@@ -18,24 +20,30 @@ public class onePlayerEventListener implements GLEventListener, KeyListener {
     static GLUT glut = new GLUT();
 
     // variables for the game
-    int[] ChickenPositions = new int[]{10, 40, 70};
+    int[] ChickenPositions1 = new int[]{10, 40, 70};
+
+    float randomL = 3;
     float xBasket = maxWidth / 2.0f, yBasket = 5.0f;
-    float xEgg = ChickenPositions[(int) (Math.random() * 3)] + 2, yEgg = 78;
+    float xEgg = ChickenPositions1[(int) (Math.random() * randomL)] + 2, yEgg = 78;
+    List<List<Float>> list = new ArrayList<>(List.of(new ArrayList<>(List.of(xEgg, yEgg))));
     float xScore = maxWidth - 15, yScore = maxHeight - 15;
+
     int maxHealth = 5, currHealth = 5;
     boolean isCollision = false;
     int score = 0;
     float eggSpeed = 0.5f;
-    int level = 1;
+    int level = 3;
 
     @Override
     public void init(GLAutoDrawable gld) {
+//        for (int i = 0; i < 4; i++) {
+//            list.add(new ArrayList<>());
+//        }
         GL gl = gld.getGL();
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //This Will Clear The Background Color To Black
         gl.glEnable(GL.GL_TEXTURE_2D);  // Enable Texture Mapping
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glGenTextures(textureNames.length, textures, 0);
-
         for (int i = 0; i < textures.length; i++) {
             try {
                 texture[i] = TextureReader.readTexture("assets//" + textureNames[i], true);
@@ -65,9 +73,9 @@ public class onePlayerEventListener implements GLEventListener, KeyListener {
         if (currHealth > 0 && score < 100)
             drawGame(gl);
         else if (score == 100)
-            drawGameStatus(gl, "You Win press n if you want play next level");
+            drawString(gl, "You Win press n if you want play next level", -0.5f, 0f);
         else
-            drawGameStatus(gl, "Game Over");
+            drawString(gl, "Game Over", 0f, 0f);
 
 
     }
@@ -91,17 +99,22 @@ public class onePlayerEventListener implements GLEventListener, KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_LEFT && xBasket > 3) {
-            xBasket--;
+//            xBasket -= 1 + (level - 1) / 4;
+            xBasket -= 2;
         } else if (keyCode == KeyEvent.VK_RIGHT && xBasket < maxWidth - 13) {
-            xBasket++;
+//            xBasket += 1 + (level - 1) / 4;
+            xBasket += 2;
         }
 
         if (keyCode == KeyEvent.VK_N && score == 100) {
             level++;
+            ChickenPositions1 = new int[]{20, 40, 60, 80};
+            randomL = (level > 1) ? 4 : 3;
             score = 0;
             maxHealth -= (level - 1);
             currHealth = maxHealth;
-            eggSpeed = 0.75f;
+
+            eggSpeed = (level == 2) ? 0.6f : 0.8f;
         }
     }
 
@@ -150,7 +163,7 @@ public class onePlayerEventListener implements GLEventListener, KeyListener {
     public void reset() {
         xBasket = maxWidth / 2.0f;
         yBasket = 3.0f;
-        xEgg = ChickenPositions[(int) (Math.random() * 3)];
+        xEgg = ChickenPositions1[(int) (Math.random() * 3)];
         yEgg = maxHeight;
         xScore = maxWidth - 15;
 //        xHealth = 1.0f;
@@ -159,45 +172,53 @@ public class onePlayerEventListener implements GLEventListener, KeyListener {
         eggSpeed = 1f;
     }
 
-    public void drawScore(GL gl) {
-        gl.glRasterPos2f(0.7f, 0.9f); // Set position for drawing
-
-        String scoreString = "Score: " + score;
-        for (char c : scoreString.toCharArray()) {
-            glut.glutBitmapCharacter(GLUT.BITMAP_HELVETICA_18, c);
-        }
-    }
-
-    public void drawLevel(GL gl) {
-        gl.glRasterPos2f(0.3f, 0.9f); // Set position for drawing
-
-        String scoreString = "Level: " + level;
-        for (char c : scoreString.toCharArray()) {
-            glut.glutBitmapCharacter(GLUT.BITMAP_HELVETICA_18, c);
-        }
-    }
-
     public void drawGame(GL gl) {
         double dist = sqrDistance((int) xBasket, (int) yBasket, (int) xEgg, (int) yEgg);
         if (dist <= 50 && !isCollision)
             isCollision = true;
+        List<Float>l=new ArrayList<>();
+        if (level == 3) {
+            for (List<Float> i : list) {
+                System.out.print(i+" ");
+                DrawSprite(gl, i.get(0), i.get(1), 1, 0.8f, 0.8f);
+//                float top = list.get(list.size() - 1).get(1);
+                i.set(1,i.get(1)-1);
+//                list.get(list.size() - 1).set(1,- 1);
+            }
+            float top = 0;
+            if (list.size() > 0)
+                top = list.get(list.size() - 1).get(1);
 
+            System.out.println(top);
+
+            if (top <= 50 && list.size() <= 1) {
+                l.add(ChickenPositions1[(int) (Math.random() * randomL)] + 2f);
+                l.add(78f);
+                list.add(l);
+            }
+        }
         if (!isCollision && yEgg > 0) {
             DrawSprite(gl, xEgg, yEgg, 1, 0.8f, 0.8f);
+
             yEgg -= eggSpeed;
+
         } else {
             if (isCollision) {
                 score += 10;
                 if (score > 0 && score % 50 == 0)
-                    eggSpeed += 0.25f;
+                    eggSpeed += 0.15f;
             } else
                 currHealth--;
+//            if (list.size() > 0)
+//                list.remove(0);
             isCollision = false;
             yEgg = 78;
-            xEgg = ChickenPositions[(int) (Math.random() * 3)] + 2;
+            xEgg = ChickenPositions1[(int) (Math.random() * randomL)] + 2;
+
+
         }
 
-        for (int i : ChickenPositions)
+        for (int i : ChickenPositions1)
             DrawSprite(gl, i, 80, 0, 1.5f, 1.5f);
 
         for (int i = 0; i < currHealth; i++)
@@ -206,17 +227,31 @@ public class onePlayerEventListener implements GLEventListener, KeyListener {
         for (int i = currHealth; i < maxHealth; i++)
             DrawSprite(gl, 5 + (i * 5), 90, 5, 0.5f, 0.5f);
 
-        drawLevel(gl);
+        drawString(gl, "Score :" + score, 0.7f, 0.9f);
 
         DrawSprite(gl, xBasket, yBasket, 3, 2f, 2f);
-        drawScore(gl);
+        drawString(gl, "Level :" + level, 0.5f, 0.9f);
     }
 
-    public void drawGameStatus(GL gl, String status) {
-        gl.glRasterPos2f(0.0f, 0.9f); // Set position for drawing
+    public void drawString(GL gl, String status, float xPos, float yPos) {
+        gl.glRasterPos2f(xPos, yPos); // Set position for drawing
 
         for (char c : status.toCharArray()) {
             glut.glutBitmapCharacter(GLUT.BITMAP_HELVETICA_18, c);
         }
     }
 }
+//                list.get((int) (Math.random() * randomL)).add(yEgg);
+
+//                    for (int j = 1; j < i.size(); j++) {
+//                        float o = i.get(j) - eggSpeed;
+//                        i.set(j, o);
+//                        if (o <= 0) {
+//                            i.remove(j);
+//                            j--;
+//                        } else if (o <= 50) {
+//                            DrawSprite(gl, ChickenPositions1[Math.round(i.get(0))] + 2, 78, 1, 0.8f, 0.8f);
+//                            i.add(78f);
+//                        }
+//
+//                    }
