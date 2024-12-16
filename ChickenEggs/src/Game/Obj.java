@@ -7,15 +7,13 @@ public class Obj {
 
     public Obj() {}
 
-    public double sqrDistance(int x1, int y1, int x2, int y2) {
-        return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
-    }
-
-    public void drawString(GL gl, GLUT glut, String status, float xPos, float yPos) {
-        gl.glRasterPos2f(xPos, yPos);
-        for (char c : status.toCharArray()) {
-            glut.glutBitmapCharacter(GLUT.BITMAP_HELVETICA_18, c);
-        }
+    public void drawBackground(GL gl) {
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[textures.length - 1]);
+        gl.glPushMatrix();
+        setOrgCoOrdVertex(gl);
+        gl.glPopMatrix();
+        gl.glDisable(GL.GL_BLEND);
     }
 
     public void setOrgCoOrdVertex(GL gl) {
@@ -31,13 +29,11 @@ public class Obj {
         gl.glEnd();
     }
 
-    public void drawBackground(GL gl) {
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[textures.length - 1]);
-        gl.glPushMatrix();
-        setOrgCoOrdVertex(gl);
-        gl.glPopMatrix();
-        gl.glDisable(GL.GL_BLEND);
+    public void drawString(GL gl, GLUT glut, String status, float xPos, float yPos) {
+        gl.glRasterPos2f(xPos, yPos);
+        for (char c : status.toCharArray()) {
+            glut.glutBitmapCharacter(GLUT.BITMAP_HELVETICA_18, c);
+        }
     }
 
     public void drawSprite(GL gl, float x, float y, int index, float scaleX, float scaleY) {
@@ -49,5 +45,9 @@ public class Obj {
         setOrgCoOrdVertex(gl);
         gl.glPopMatrix();
         gl.glDisable(GL.GL_BLEND);
+    }
+
+    public double sqrDistance(int x1, int y1, int x2, int y2) {
+        return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
     }
 }

@@ -2,19 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ebfc89c-6503-4218-926f-622c1d7119c5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/app.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/onePlayerEventListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/Texture/BitmapLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/Texture/ResourceRetriever.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/Texture/TextureReader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Back.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Basket.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Chicken.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Egg 2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Egg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Heart 1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Heart 2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cs304-graphics-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cs304-graphics-project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChickenEggs/src/Game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChickenEggs/src/Game/app.java" beforeDir="false" afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/app.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,9 +15,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2qFUgsp23qlk7CWFZd8cK0qjyR8" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -35,10 +29,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging main",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/projects/cs304-graphics-project",
+    "last_opened_file_path": "E:/projects/cs304-graphics-project/ChickenEggs",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -59,6 +56,7 @@
       <option name="presentableId" value="Default" />
       <updated>1734257930531</updated>
       <workItem from="1734257931656" duration="178000" />
+      <workItem from="1734304520496" duration="262000" />
     </task>
     <servers />
   </component>
