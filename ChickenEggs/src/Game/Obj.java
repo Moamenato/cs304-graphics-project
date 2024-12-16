@@ -1,6 +1,9 @@
 package Game;
-import javax.media.opengl.GL;
+
 import com.sun.opengl.util.GLUT;
+
+import javax.media.opengl.GL;
+
 import static Game.Anim_Listener.*;
 
 public class Obj {

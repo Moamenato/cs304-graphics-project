@@ -1,16 +1,17 @@
 package Game;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.JFrame;
-import javax.media.opengl.GLCanvas;
+
 import com.sun.opengl.util.FPSAnimator;
 
+import javax.media.opengl.GLCanvas;
+import javax.swing.*;
+import java.awt.*;
+
 public class app extends JFrame {
-    public One_playerVsAi listener = new One_playerVsAi();
+    public One_Player_Mode listener = new One_Player_Mode(1);
     public static FPSAnimator animator = null;
 
     public static void main(String[] args) {
-        final Game.app app = new Game.app();
+        final app app = new app();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 app.setVisible(true);
@@ -25,8 +26,6 @@ public class app extends JFrame {
         animator = new FPSAnimator(glcanvas, 30);
         glcanvas.addGLEventListener(listener);
         glcanvas.addKeyListener(listener);
-//        glcanvas.addMouseListener(listener);
-//        glcanvas.addMouseMotionListener(listener);
         animator.start();
         getContentPane().add(glcanvas, BorderLayout.CENTER);
         glcanvas.setFocusable(true);
@@ -36,4 +35,3 @@ public class app extends JFrame {
         setVisible(true);
     }
 }
-

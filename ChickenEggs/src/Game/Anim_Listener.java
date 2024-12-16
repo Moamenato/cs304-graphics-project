@@ -1,7 +1,9 @@
 package Game;
+
 import Texture.TextureReader;
-import java.awt.event.KeyListener;
+
 import javax.media.opengl.GLEventListener;
+import java.awt.event.KeyListener;
 
 public abstract class Anim_Listener implements GLEventListener, KeyListener {
     public static int maxWidth = 100, maxHeight = 100;
