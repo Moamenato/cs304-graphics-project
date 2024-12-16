@@ -6,7 +6,7 @@ import javax.media.opengl.GLCanvas;
 import com.sun.opengl.util.FPSAnimator;
 
 public class app extends JFrame {
-    public Two_Players listener = new Two_Players();
+    public One_playerVsAi listener = new One_playerVsAi();
     public static FPSAnimator animator = null;
 
     public static void main(String[] args) {

@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import javax.media.opengl.GL;
 import java.util.Collections;
 import com.sun.opengl.util.GLUT;
-import static Game.Two_Players.*;
-public class Player implements Player_Template {
+
+import static Game.One_playerVsAi.*;
+public class PlayerAI implements Player_Template {
     Obj obj = new Obj();
     private int[] ChickenPositions;
     private boolean isCollision, restart;
@@ -14,7 +15,7 @@ public class Player implements Player_Template {
     private float xEgg, yEgg, eggSpeed, xBasket, yBasket;
     List<List<Float>> list = new ArrayList<>(Collections.singletonList(new ArrayList<>(Arrays.asList(xEgg, yEgg))));
 
-    public Player(int[] ChickenPositions, boolean isCollision, boolean restart, int score, int level, int totalScore, int maxHealth, int currHealth, float xEgg, float yEgg, float eggSpeed, float xBasket, float yBasket) {
+    public PlayerAI(int[] ChickenPositions, boolean isCollision, boolean restart, int score, int level, int totalScore, int maxHealth, int currHealth, float xEgg, float yEgg, float eggSpeed, float xBasket, float yBasket) {
         this.ChickenPositions = ChickenPositions;
         this.isCollision = isCollision;
         this.restart = restart;
@@ -163,6 +164,12 @@ public class Player implements Player_Template {
         List<Integer> pops = new ArrayList<>();
         for (List<Float> i : list) {
             double dist = obj.sqrDistance((int) xBasket, (int) yBasket, Math.round(i.get(0)), Math.round(i.get(1)));
+            if (!isLeft && xBasket > i.get(0) && (i.get(1)-yBasket)<=25){
+                xBasket=xBasket-level;
+            }
+            if (!isLeft && xBasket < i.get(0) && (i.get(1)-yBasket)<=25){
+                xBasket=xBasket+level;
+            }
             if (dist <= 20 && !isCollision && !spaceClicked) {
                 isCollision = true;
             }

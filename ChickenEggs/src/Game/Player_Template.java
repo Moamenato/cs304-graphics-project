@@ -1,4 +1,5 @@
 package Game;
+
 import java.util.List;
 
 public interface Player_Template {
@@ -30,14 +31,6 @@ public interface Player_Template {
 
     void setYEgg(float yEgg);
 
-    void setMode(int mode);
-
-    void setSpaceClickedPlayer(boolean spaceClickedPlayer);
-
-    void setSecondsPlayer(float secondsPlayer);
-
-    void setMinutesPlayer(float minutesPlayer);
-
     void setList(List<List<Float>> list);
 
     // Getter methods
@@ -66,14 +59,6 @@ public interface Player_Template {
     float getXEgg();
 
     float getYEgg();
-
-    int getMode();
-
-    boolean getSpaceClickedPlayer();
-
-    float getSecondsPlayer();
-
-    float getMinutesPlayer();
 
     List<List<Float>> getList();
 }

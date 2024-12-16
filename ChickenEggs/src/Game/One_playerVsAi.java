@@ -7,7 +7,7 @@ import Texture.TextureReader;
 import com.sun.opengl.util.GLUT;
 import javax.media.opengl.glu.GLU;
 
-public class Two_Players extends Anim_Listener {
+public class One_playerVsAi extends Anim_Listener {
     // global variables for the game
     Obj obj = new Obj();
     int whoWin = 0;
@@ -25,18 +25,16 @@ public class Two_Players extends Anim_Listener {
     int[] chickenRight = new int[]{55, 70, 85};
     int leftStart = chickenLeft[(int) (Math.random() * 3)] + 2;
     int rightStart = chickenRight[(int) (Math.random() * 3)] + 2;
-    Player left = new Player(chickenLeft, false, false, 0, 1, 0, 5, 5, leftStart, 78, 0.75f, newMaxWidth / 2.0f, 5.0f);
-    Player right = new Player(chickenRight, false, false, 0, 1, 0, 5, 5, rightStart, 78, 0.75f, newMaxWidth + newMaxWidth / 2.0f, 5.0f);
+    PlayerAI left = new PlayerAI(chickenLeft, false, false, 0, 1, 0, 5, 5, leftStart, 78, 0.75f, newMaxWidth / 2.0f, 5.0f);
+    PlayerAI right = new PlayerAI(chickenRight, false, false, 0, 1, 0, 5, 5, rightStart, 78, 0.75f, newMaxWidth + newMaxWidth / 2.0f, 5.0f);
 
     @Override
     public void init(GLAutoDrawable gld) {
         GL gl = gld.getGL();
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
         gl.glEnable(GL.GL_TEXTURE_2D);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glGenTextures(textureNames.length, textures, 0);
-
         for (int i = 0; i < textures.length; i++) {
             try {
                 texture[i] = TextureReader.readTexture(assetsFolder + "//" + textureNames[i], true);
@@ -57,14 +55,13 @@ public class Two_Players extends Anim_Listener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
         obj.drawBackground(gl);
-
-        if (restartGame) {
+        if (restartGame && left.getCurrHealth() <= 0) {
             if (whoWin == 1) {
-                obj.drawString(gl, glutLeft, "Left Player Wins!", -0.2f, 0.0f);
+                obj.drawString(gl, glutLeft, "Player Wins!", -0.2f, 0.0f);
             } else if (whoWin == 0) {
                 obj.drawString(gl, glutLeft, "It's a Tie!", -0.2f, 0.0f);
             } else {
-                obj.drawString(gl, glutRight, "Right Player Wins!", -0.2f, 0.0f);
+                obj.drawString(gl, glutRight, "PC Wins!", -0.2f, 0.0f);
             }
             obj.drawString(gl, glutRight, "Press R to restart!", -0.2f, -0.1f);
         } else {
@@ -80,12 +77,11 @@ public class Two_Players extends Anim_Listener {
                 restartGame = true;
             } else if (left.getCurrHealth() <= 0 || right.getCurrHealth() <= 0 ) {
                 if (left.getCurrHealth() <= 0) {
-                    obj.drawString(gl, glutLeft, "Game Over!", -0.75f, 0.0f);
-                    obj.drawString(gl, glutLeft, "waiting right player!", -0.75f, -0.1f);
+                    obj.drawString(gl, glutLeft, "Game Is Over!", -0.75f, 0.0f);
+                    obj.drawString(gl, glutLeft, "waiting PC!", -0.75f, -0.1f);
                     if (right.getScore() == 100) {
                         if ((right.getLevel() < 3)) {
-                            obj.drawString(gl, glutRight, "You Win This Level!", 0.25f, 0.0f);
-                            obj.drawString(gl, glutRight, "press m to next level!", 0.25f, -0.1f);
+                            right.goNextLevel();
                         } else {
                             right.setCurrHealth(0);
                             restartGame = true;
@@ -95,8 +91,8 @@ public class Two_Players extends Anim_Listener {
                         right.drawGame(gl, glutRight, false);
                     }
                 } else {
-                    obj.drawString(gl, glutRight, "Game Over!", 0.25f, 0.0f);
-                    obj.drawString(gl, glutRight, "waiting left player!", 0.25f, -0.1f);
+                    obj.drawString(gl, glutRight, "Game Is Over!", 0.25f, 0.0f);
+                    obj.drawString(gl, glutRight, "waiting player!", 0.25f, -0.1f);
                     if (left.getScore() == 100) {
                         if ((left.getLevel() < 3)) {
                             obj.drawString(gl, glutLeft, "You Win This Level!", -0.75f, 0.0f);
@@ -113,8 +109,7 @@ public class Two_Players extends Anim_Listener {
             }else if (right.getScore() == 100 || left.getScore() == 100){
                 if (right.getScore() == 100) {
                     if ((right.getLevel() < 3)) {
-                        obj.drawString(gl, glutRight, "You Win This Level!", 0.25f, 0.0f);
-                        obj.drawString(gl, glutRight, "press m to next level!", 0.25f, -0.1f);
+                        right.goNextLevel();
                     } else {
                         right.setCurrHealth(0);
                         restartGame = true;
@@ -184,15 +179,6 @@ public class Two_Players extends Anim_Listener {
                 left.goNextLevel();
             }
 
-            // handle right player key pressed
-            if (isKeyPressed(KeyEvent.VK_A) && right.getXBasket() > 53 && !spaceClicked) {
-                right.setXBasket(right.getXBasket() - right.getLevel());
-            } else if (isKeyPressed(KeyEvent.VK_D) && right.getXBasket() < 2 * newMaxWidth - 13 && !spaceClicked) {
-                right.setXBasket(right.getXBasket() + right.getLevel());
-            }
-            if (isKeyPressed(KeyEvent.VK_M) && right.getScore() == 100) {
-                right.goNextLevel();
-            }
             if (isKeyPressed(KeyEvent.VK_R) && restartGame) {
                 restartGame = false;
                 whoWin = 0;
