@@ -6,7 +6,7 @@ import javax.media.opengl.GLCanvas;
 import com.sun.opengl.util.FPSAnimator;
 
 public class app extends JFrame {
-    public One_playerVsAi listener = new One_playerVsAi();
+    public ScreensListener listener = new ScreensListener();
     public static FPSAnimator animator = null;
 
     public static void main(String[] args) {
@@ -25,6 +25,8 @@ public class app extends JFrame {
         animator = new FPSAnimator(glcanvas, 30);
         glcanvas.addGLEventListener(listener);
         glcanvas.addKeyListener(listener);
+        glcanvas.addMouseListener(listener);
+        glcanvas.addMouseMotionListener(listener);
         animator.start();
         getContentPane().add(glcanvas, BorderLayout.CENTER);
         glcanvas.setFocusable(true);

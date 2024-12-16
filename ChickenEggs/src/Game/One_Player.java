@@ -142,7 +142,7 @@ public class One_Player extends Anim_Listener {
         }
 
         if (level == 3) {
-            if (list.getFirst().get(1) <= 50 && list.size() <= 1) {
+            if (list.get(0).get(1) <= 50 && list.size() <= 1) {
                 list.add(new ArrayList<>(Arrays.asList(ChickenPositions[(int) (Math.random() * random)] + 2f, 78f)));
             }
         }
