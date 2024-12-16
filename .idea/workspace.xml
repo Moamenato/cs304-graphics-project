@@ -5,17 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1ebfc89c-6503-4218-926f-622c1d7119c5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/ScreensListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Home1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Home2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/Home3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/backButton.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChickenEggs/src/assets/how.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cs304-graphics-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cs304-graphics-project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib64.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/lib64.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChickenEggs/src/Game/One_Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/One_Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChickenEggs/src/Game/PlayerAI.java" beforeDir="false" afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/PlayerAI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChickenEggs/src/Game/Two_Players.java" beforeDir="false" afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/Two_Players.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChickenEggs/src/Game/app.java" beforeDir="false" afterPath="$PROJECT_DIR$/ChickenEggs/src/Game/app.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,18 +18,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "AhmedHesham-77"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AhmedHesham-77&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Moamenato/cs304-graphics-project.git",
-    "accountId": "55cee64e-0956-47a3-8396-068a6fe966cd"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Moamenato/cs304-graphics-project.git&quot;,
+    &quot;accountId&quot;: &quot;55cee64e-0956-47a3-8396-068a6fe966cd&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
@@ -49,25 +41,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.app.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/University/Graphics/cs304-graphics-project/ChickenEggs/src/assets",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.32198954",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.app.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/University/Graphics/cs304-graphics-project/ChickenEggs/src/assets&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.32198954&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\University\Graphics\cs304-graphics-project\ChickenEggs\src\assets" />
@@ -115,6 +107,7 @@
       <workItem from="1734257931656" duration="178000" />
       <workItem from="1734304520496" duration="262000" />
       <workItem from="1734371356060" duration="401000" />
+      <workItem from="1734372446855" duration="2485000" />
     </task>
     <servers />
   </component>

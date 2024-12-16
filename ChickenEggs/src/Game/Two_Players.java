@@ -175,9 +175,9 @@ public class Two_Players extends Anim_Listener {
             spaceClicked = !spaceClicked;
         } else {
             // handle left player key pressed
-            if (isKeyPressed(KeyEvent.VK_LEFT) && left.getXBasket() > 3 && !spaceClicked) {
+            if (isKeyPressed(KeyEvent.VK_A) && left.getXBasket() > 3 && !spaceClicked) {
                 left.setXBasket(left.getXBasket() - left.getLevel());
-            } else if (isKeyPressed(KeyEvent.VK_RIGHT) && left.getXBasket() < newMaxWidth - 13 && !spaceClicked) {
+            } else if (isKeyPressed(KeyEvent.VK_D) && left.getXBasket() < newMaxWidth - 13 && !spaceClicked) {
                 left.setXBasket(left.getXBasket() + left.getLevel());
             }
             if (isKeyPressed(KeyEvent.VK_N) && left.getScore() == 100) {
@@ -185,9 +185,9 @@ public class Two_Players extends Anim_Listener {
             }
 
             // handle right player key pressed
-            if (isKeyPressed(KeyEvent.VK_A) && right.getXBasket() > 53 && !spaceClicked) {
+            if (isKeyPressed(KeyEvent.VK_LEFT) && right.getXBasket() > 53 && !spaceClicked) {
                 right.setXBasket(right.getXBasket() - right.getLevel());
-            } else if (isKeyPressed(KeyEvent.VK_D) && right.getXBasket() < 2 * newMaxWidth - 13 && !spaceClicked) {
+            } else if (isKeyPressed(KeyEvent.VK_RIGHT) && right.getXBasket() < 2 * newMaxWidth - 13 && !spaceClicked) {
                 right.setXBasket(right.getXBasket() + right.getLevel());
             }
             if (isKeyPressed(KeyEvent.VK_M) && right.getScore() == 100) {
