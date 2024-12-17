@@ -13,15 +13,16 @@ import static Game.AI_Player_Mode.*;
 public class AIPlayer implements Player_Template {
     Obj obj = new Obj();
     private int[] ChickenPositions;
-    private boolean isCollision, restart;
+    private boolean isCollision, restart, savedscore;
     private int score, level, totalScore, maxHealth, currHealth;
     private float xEgg, yEgg, eggSpeed, xBasket, yBasket;
     List<List<Float>> list = new ArrayList<>(Collections.singletonList(new ArrayList<>(Arrays.asList(xEgg, yEgg))));
 
-    public AIPlayer(int[] ChickenPositions, boolean isCollision, boolean restart, int score, int level, int totalScore, int maxHealth, int currHealth, float xEgg, float yEgg, float eggSpeed, float xBasket, float yBasket) {
+    public AIPlayer(int[] ChickenPositions, boolean isCollision, boolean restart, boolean savedscore, int score, int level, int totalScore, int maxHealth, int currHealth, float xEgg, float yEgg, float eggSpeed, float xBasket, float yBasket) {
         this.ChickenPositions = ChickenPositions;
         this.isCollision = isCollision;
         this.restart = restart;
+        this.savedscore = savedscore;
         this.score = score;
         this.level = level;
         this.totalScore = totalScore;
@@ -45,6 +46,10 @@ public class AIPlayer implements Player_Template {
 
     public void setRestart(boolean restart) {
         this.restart = restart;
+    }
+
+    public void setSavedscore(boolean savedscore) {
+        this.savedscore = savedscore;
     }
 
     public void setScore(int score) {
@@ -104,6 +109,10 @@ public class AIPlayer implements Player_Template {
         return restart;
     }
 
+    public boolean getSaveScore() {
+        return savedscore;
+    }
+
     public int getScore() {
         return score;
     }
@@ -151,9 +160,11 @@ public class AIPlayer implements Player_Template {
     public void reset(boolean isPlayer) {
         if (isPlayer) {
             xBasket = (maxWidth / 2.0f) + (maxWidth / 2.0f) / 2.0f;
+            savedscore = false;
         } else {
             xBasket = (maxWidth / 2.0f) / 2.0f;
         }
+        totalScore = 0;
         list = new ArrayList<>(Collections.singletonList(new ArrayList<>(Arrays.asList(xEgg, yEgg))));
         maxHealth = 5;
         currHealth = 5;
@@ -206,7 +217,7 @@ public class AIPlayer implements Player_Template {
                 list.add(new ArrayList<>(Arrays.asList(ChickenPositions[(int) (Math.random() * random)] + 2f, 78f)));
             }
         }
-        if (!spaceClicked && isPlayer) {
+        if (!spaceClicked && !isPlayer) {
             seconds += 1 / 30f;
             if (seconds >= 60) {
                 minutes++;

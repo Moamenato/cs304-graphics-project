@@ -13,12 +13,13 @@ import static Game.One_Player_Mode.*;
 public class OnePlayer implements Player_Template {
     Obj obj = new Obj();
     private int[] ChickenPositions;
-    private boolean isCollision, restart;
+    private boolean isCollision, restart, savedscore;
     private int score, level, totalScore, maxHealth, currHealth;
     private float xEgg, yEgg, eggSpeed, xBasket, yBasket;
+    public int counter = 0;
     List<List<Float>> list = new ArrayList<>(Collections.singletonList(new ArrayList<>(Arrays.asList(xEgg, yEgg))));
 
-    public OnePlayer(int[] ChickenPositions, boolean isCollision, boolean restart, int score, int level, int totalScore, int maxHealth, int currHealth, float xEgg, float yEgg, float eggSpeed, float xBasket, float yBasket) {
+    public OnePlayer(int[] ChickenPositions, boolean isCollision, boolean restart, boolean savedscore, int score, int level, int totalScore, int maxHealth, int currHealth, float xEgg, float yEgg, float eggSpeed, float xBasket, float yBasket) {
         this.ChickenPositions = ChickenPositions;
         this.isCollision = isCollision;
         this.restart = restart;
@@ -32,6 +33,7 @@ public class OnePlayer implements Player_Template {
         this.eggSpeed = eggSpeed;
         this.xBasket = xBasket;
         this.yBasket = yBasket;
+        this.savedscore = savedscore;
     }
 
     // Setter methods
@@ -45,6 +47,10 @@ public class OnePlayer implements Player_Template {
 
     public void setRestart(boolean restart) {
         this.restart = restart;
+    }
+
+    public void setSavedscore(boolean savedscore) {
+        this.savedscore = savedscore;
     }
 
     public void setScore(int score) {
@@ -104,6 +110,10 @@ public class OnePlayer implements Player_Template {
         return restart;
     }
 
+    public boolean getSavedscore() {
+        return savedscore;
+    }
+
     public int getScore() {
         return score;
     }
@@ -148,7 +158,7 @@ public class OnePlayer implements Player_Template {
         return list;
     }
 
-    public void reset() {
+    public void reset(int lvl) {
         ChickenPositions = new int[]{10, 40, 70};
         random = 3;
         xBasket = maxWidth / 2.0f;
@@ -159,11 +169,19 @@ public class OnePlayer implements Player_Template {
         score = 0;
         eggSpeed = 0.75f;
         level = 1;
+        totalScore = 0;
         list = new ArrayList<>(Collections.singletonList(new ArrayList<>(Arrays.asList(xEgg, yEgg))));
+        if (lvl == 2) {
+            goNextLevel();
+        } else if (lvl == 3) {
+            goNextLevel();
+            goNextLevel();
+        }
     }
 
     public void drawGame(GL gl, GLUT glut) {
         List<Integer> pops = new ArrayList<>();
+        int x = level == 1 ? 3 : 4;
         for (List<Float> i : list) {
             double dist = obj.sqrDistance((int) xBasket, (int) yBasket, Math.round(i.get(0)), Math.round(i.get(1)));
             if (dist <= 50 && !isCollision) {
@@ -177,6 +195,7 @@ public class OnePlayer implements Player_Template {
             } else {
                 if (isCollision) {
                     score += 10;
+                    totalScore++;
                     if (score > 0 && score % 50 == 0) {
                         eggSpeed += 0.15f;
                     }
@@ -193,11 +212,12 @@ public class OnePlayer implements Player_Template {
             for (int i : pops) {
                 list.remove(i);
             }
-            list.add(new ArrayList<>(Arrays.asList(ChickenPositions[(int) (Math.random() * random)] + 2f, 78f)));
+            list.add(new ArrayList<>(Arrays.asList(ChickenPositions[(int) (Math.random() * x)] + 2f, 78f)));
+
         }
         if (level == 3) {
             if (list.get(0).get(1) <= 50 && list.size() <= 1) {
-                list.add(new ArrayList<>(Arrays.asList(ChickenPositions[(int) (Math.random() * random)] + 2f, 78f)));
+                list.add(new ArrayList<>(Arrays.asList(ChickenPositions[(int) (Math.random() * x)] + 2f, 78f)));
             }
         }
         if (!spaceClicked) {
@@ -226,6 +246,7 @@ public class OnePlayer implements Player_Template {
         level++;
         ChickenPositions = new int[]{10, 30, 50, 70};
         random = 4;
+        savedscore = false;
         score = 0;
         maxHealth--;
         currHealth = maxHealth;

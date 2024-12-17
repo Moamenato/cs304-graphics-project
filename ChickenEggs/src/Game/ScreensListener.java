@@ -9,7 +9,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -127,8 +126,8 @@ public class ScreensListener extends Anim_Listener implements MouseListener, Mou
         double height = e.getComponent().getHeight();
         xMouse1 = (int) convertX(x, width);
         yMouse1 = (int) convertY(y, height);
-        System.out.print(xMouse1 + " " + yMouse1);
-        System.out.println();
+//        System.out.print(xMouse1 + " " + yMouse1);
+//        System.out.println();
     }
 
 

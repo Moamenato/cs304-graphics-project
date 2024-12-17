@@ -26,7 +26,8 @@ public class Two_Players_Mode extends Anim_Listener {
     public static float minutes = 0, seconds = 0;
     int newMaxWidth = Anim_Listener.maxWidth / 2;
     public BitSet keyBits = new BitSet(256);
-
+    int maxscoreleft = 0;
+    int maxscoreright = 0;
     // Players Variables
     static GLUT glutLeft = new GLUT();
     static GLUT glutRight = new GLUT();
@@ -34,10 +35,13 @@ public class Two_Players_Mode extends Anim_Listener {
     int[] chickenRight = new int[]{55, 70, 85};
     int leftStart = chickenLeft[(int) (Math.random() * 3)] + 2;
     int rightStart = chickenRight[(int) (Math.random() * 3)] + 2;
-    TwoPlayers left = new TwoPlayers(chickenLeft, false, false, 0, 1, 0, 5, 5, leftStart, 78, 0.75f, newMaxWidth / 2.0f, 5.0f);
-    TwoPlayers right = new TwoPlayers(chickenRight, false, false, 0, 1, 0, 5, 5, rightStart, 78, 0.75f, newMaxWidth + newMaxWidth / 2.0f, 5.0f);
+    TwoPlayers left = new TwoPlayers(chickenLeft, false, false,false, false,0, 1, 0, 5, 5, leftStart, 78, 0.75f, newMaxWidth / 2.0f, 5.0f);
+    TwoPlayers right = new TwoPlayers(chickenRight, false, false, false,false,0, 1, 0, 5, 5, rightStart, 78, 0.75f, newMaxWidth + newMaxWidth / 2.0f, 5.0f);
 
     public Two_Players_Mode(int level) {
+        minutes = 0;
+        seconds = 0;
+        spaceClicked = false;
         if (level == 1) {
             left.reset(true);
             right.reset(false);
@@ -88,11 +92,11 @@ public class Two_Players_Mode extends Anim_Listener {
             }
             scanner.close();
 
-            vec.add(new Scores(this.player1Name, this.left.getTotalScore()*10));
-            vec.add(new Scores(this.player2Name, this.right.getTotalScore()*10));
+            vec.add(new Scores(this.player1Name, maxscoreleft*10));
+            vec.add(new Scores(this.player2Name, maxscoreright*10));
 
 
-            vec.sort((user1, user2) -> user1.getScore() < user2.getScore() ? 1 : user1.getScore() > user2.getScore() ? -1 : 0);
+            vec.sort((user1, user2) -> Integer.compare(user2.getScore(), user1.getScore()));
 
 
             try (FileWriter myWriter = new FileWriter("src/assets/scores.txt")) {
@@ -134,7 +138,7 @@ public class Two_Players_Mode extends Anim_Listener {
         }
     }
 
-    boolean scoreSaved = false;
+
 
     @Override
     public void display(GLAutoDrawable gld) {
@@ -142,7 +146,8 @@ public class Two_Players_Mode extends Anim_Listener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
         obj.drawBackground(gl);
-
+        maxscoreright = Math.max(maxscoreright,right.getTotalScore());
+        maxscoreleft = Math.max(maxscoreleft,left.getTotalScore());
         if (restartGame) {
             if (whoWin == 1) {
                 obj.drawString(gl, glutLeft, "Left Player Wins!", -0.2f, 0.0f);
@@ -157,6 +162,11 @@ public class Two_Players_Mode extends Anim_Listener {
                 obj.drawString(gl, glutLeft, "Game Paused!", -0.2f, 0.0f);
             }
             if (left.getCurrHealth() <= 0 && right.getCurrHealth() <= 0) {
+                if (!left.getSavedscore() && ! right.getSavedscore()) {
+                    left.setScoreSaved(true);
+                    right.setScoreSaved(true);
+                    getHighScores();
+                }
                 if (left.getTotalScore() > right.getTotalScore()) {
                     whoWin = 1;
                 } else if (left.getTotalScore() < right.getTotalScore()) {
@@ -164,17 +174,12 @@ public class Two_Players_Mode extends Anim_Listener {
                 }
                 restartGame = true;
             } else if (left.getCurrHealth() <= 0 || right.getCurrHealth() <= 0) {
-                if (!scoreSaved) {
-                    scoreSaved = true;
-                    System.out.println(left.getTotalScore());
-                    System.out.println(right.getTotalScore());
-                    getHighScores();
-                }
                 if (left.getCurrHealth() <= 0) {
                     obj.drawString(gl, glutLeft, "Game Over!", -0.75f, 0.0f);
                     obj.drawString(gl, glutLeft, "waiting right player!", -0.75f, -0.1f);
                     if (right.getScore() == 100) {
                         if ((right.getLevel() < 3)) {
+                            right.setTimer(false);
                             obj.drawString(gl, glutRight, "You Win This Level!", 0.25f, 0.0f);
                             obj.drawString(gl, glutRight, "press m to next level!", 0.25f, -0.1f);
                         } else {
@@ -184,12 +189,20 @@ public class Two_Players_Mode extends Anim_Listener {
                         }
                     } else {
                         right.drawGame(gl, glutRight, false);
+                        if (!spaceClicked ) {
+                            seconds += 1 / 60f;
+                            if (seconds >= 60) {
+                                minutes++;
+                                seconds = 0;
+                            }
+                        }
                     }
                 } else {
                     obj.drawString(gl, glutRight, "Game Over!", 0.25f, 0.0f);
                     obj.drawString(gl, glutRight, "waiting left player!", 0.25f, -0.1f);
                     if (left.getScore() == 100) {
                         if ((left.getLevel() < 3)) {
+                            left.setTimer(false);
                             obj.drawString(gl, glutLeft, "You Win This Level!", -0.75f, 0.0f);
                             obj.drawString(gl, glutLeft, "press n to next level!", -0.75f, -0.1f);
                         } else {
@@ -199,11 +212,19 @@ public class Two_Players_Mode extends Anim_Listener {
                         }
                     } else {
                         left.drawGame(gl, glutLeft, true);
+                        if (!spaceClicked) {
+                            seconds += 1 / 60f;
+                            if (seconds >= 60) {
+                                minutes++;
+                                seconds = 0;
+                            }
+                        }
                     }
                 }
             } else if (right.getScore() == 100 || left.getScore() == 100) {
                 if (right.getScore() == 100) {
                     if ((right.getLevel() < 3)) {
+                        right.setTimer(false);
                         obj.drawString(gl, glutRight, "You Win This Level!", 0.25f, 0.0f);
                         obj.drawString(gl, glutRight, "press m to next level!", 0.25f, -0.1f);
                     } else {
@@ -213,10 +234,18 @@ public class Two_Players_Mode extends Anim_Listener {
                     }
                 } else {
                     right.drawGame(gl, glutRight, false);
+                    if (!spaceClicked) {
+                        seconds += 1 / 60f;
+                        if (seconds >= 60) {
+                            minutes++;
+                            seconds = 0;
+                        }
+                    }
                 }
 
                 if (left.getScore() == 100) {
                     if ((left.getLevel() < 3)) {
+                        left.setTimer(false);
                         obj.drawString(gl, glutLeft, "You Win This Level!", -0.75f, 0.0f);
                         obj.drawString(gl, glutLeft, "press n to next level!", -0.75f, -0.1f);
                     } else {
@@ -226,11 +255,25 @@ public class Two_Players_Mode extends Anim_Listener {
                     }
                 } else {
                     left.drawGame(gl, glutLeft, true);
+                    if (!spaceClicked) {
+                        seconds += 1 / 60f;
+                        if (seconds >= 60) {
+                            minutes++;
+                            seconds = 0;
+                        }
+                    }
                 }
 
             } else {
                 left.drawGame(gl, glutLeft, true);
                 right.drawGame(gl, glutRight, false);
+                if (!spaceClicked) {
+                    seconds += 1 / 60f;
+                    if (seconds >= 60) {
+                        minutes++;
+                        seconds = 0;
+                    }
+                }
             }
         }
     }
@@ -271,6 +314,7 @@ public class Two_Players_Mode extends Anim_Listener {
                 left.setXBasket(left.getXBasket() + left.getLevel());
             }
             if (isKeyPressed(KeyEvent.VK_N) && left.getScore() == 100) {
+                left.setTimer(true);
                 left.goNextLevel();
             }
 
@@ -281,6 +325,7 @@ public class Two_Players_Mode extends Anim_Listener {
                 right.setXBasket(right.getXBasket() + right.getLevel());
             }
             if (isKeyPressed(KeyEvent.VK_M) && right.getScore() == 100) {
+                right.setTimer(true);
                 right.goNextLevel();
             }
             if (isKeyPressed(KeyEvent.VK_R) && restartGame) {

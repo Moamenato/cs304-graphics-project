@@ -8,14 +8,38 @@ import static Game.Anim_Listener.*;
 
 public class Obj {
 
-    public Obj() {}
+    public Obj() {
+    }
 
     public void drawBackground(GL gl) {
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[textures.length - 1]);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[textures.length - 3]);
         gl.glPushMatrix();
         setOrgCoOrdVertex(gl);
         gl.glPopMatrix();
+        gl.glDisable(GL.GL_BLEND);
+    }
+
+    public void DrawAudioButton(GL gl, int index) {
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);    // Turn Blending On
+
+        gl.glPushMatrix();
+        gl.glTranslated(0.9, 1.75 - 0.9, 0);
+        gl.glScaled(0.1, 0.1, 1);
+        gl.glBegin(GL.GL_QUADS);
+
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+        gl.glEnd();
+        gl.glPopMatrix();
+
         gl.glDisable(GL.GL_BLEND);
     }
 

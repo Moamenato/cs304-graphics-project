@@ -26,7 +26,7 @@ public class AI_Player_Mode extends Anim_Listener {
     public static float minutes = 0, seconds = 0;
     int newMaxWidth = Anim_Listener.maxWidth / 2;
     public BitSet keyBits = new BitSet(256);
-
+    int maxscore = 0;
     // Players Variables
     static GLUT glutPC = new GLUT();
     static GLUT glutPlayer = new GLUT();
@@ -34,8 +34,8 @@ public class AI_Player_Mode extends Anim_Listener {
     int[] chickenRight = new int[]{55, 70, 85};
     int leftStart = chickenLeft[(int) (Math.random() * 3)] + 2;
     int rightStart = chickenRight[(int) (Math.random() * 3)] + 2;
-    AIPlayer PC = new AIPlayer(chickenLeft, false, false, 0, 1, 0, 5, 5, leftStart, 78, 0.75f, newMaxWidth / 2.0f, 5.0f);
-    AIPlayer player = new AIPlayer(chickenRight, false, false, 0, 1, 0, 5, 5, rightStart, 78, 0.75f, newMaxWidth + newMaxWidth / 2.0f, 5.0f);
+    AIPlayer PC = new AIPlayer(chickenLeft, false, false, false, 0, 1, 0, 5, 5, leftStart, 78, 0.75f, newMaxWidth / 2.0f, 5.0f);
+    AIPlayer player = new AIPlayer(chickenRight, false, false, false, 0, 1, 0, 5, 5, rightStart, 78, 0.75f, newMaxWidth + newMaxWidth / 2.0f, 5.0f);
     boolean savedScore = false;
     String playerName = "";
 
@@ -69,11 +69,10 @@ public class AI_Player_Mode extends Anim_Listener {
                 vec.add(new Scores(curUserName.toString().trim(), score));
             }
             scanner.close();
+            vec.add(new Scores(this.playerName, maxscore * 10));
 
-            vec.add(new Scores(this.playerName, this.player.getScore()));
 
-
-            vec.sort((user1, user2) -> user1.getScore() < user2.getScore() ? 1 : user1.getScore() > user2.getScore() ? -1 : 0);
+            vec.sort((user1, user2) -> Integer.compare(user2.getScore(), user1.getScore()));
 
 
             try (FileWriter myWriter = new FileWriter("src/assets/scores.txt")) {
@@ -97,6 +96,9 @@ public class AI_Player_Mode extends Anim_Listener {
     }
 
     public AI_Player_Mode(int level) {
+        minutes = 0;
+        seconds = 0;
+        spaceClicked = false;
         if (level == 1) {
             PC.reset(true);
             player.reset(false);
@@ -138,7 +140,12 @@ public class AI_Player_Mode extends Anim_Listener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
         obj.drawBackground(gl);
-        if (restartGame && player.getCurrHealth() <= 0) {
+        maxscore = Math.max(maxscore, player.getTotalScore());
+        if ((restartGame && player.getCurrHealth() <= 0)) {
+            if (!player.getSaveScore()) {
+                player.setSavedscore(true);
+                getHighScores();
+            }
             if (whoWin == 1) {
                 obj.drawString(gl, glutPC, "PC Wins!", -0.2f, 0.0f);
             } else if (whoWin == 0) {
@@ -152,6 +159,7 @@ public class AI_Player_Mode extends Anim_Listener {
                 obj.drawString(gl, glutPC, "Game Paused!", -0.2f, 0.0f);
             }
             if (PC.getCurrHealth() <= 0 && player.getCurrHealth() <= 0) {
+
                 if (PC.getTotalScore() > player.getTotalScore()) {
                     whoWin = 1;
                 } else if (PC.getTotalScore() < player.getTotalScore()) {
@@ -159,12 +167,6 @@ public class AI_Player_Mode extends Anim_Listener {
                 }
                 restartGame = true;
             } else if (PC.getCurrHealth() <= 0 || player.getCurrHealth() <= 0) {
-                if (!savedScore) {
-                    savedScore = true;
-                    System.out.println(this.player.getScore());
-                    System.out.println("here");
-                    getHighScores();
-                }
                 if (player.getCurrHealth() <= 0) {
                     obj.drawString(gl, glutPlayer, "Game Is Over!", 0.25f, 0.0f);
                     obj.drawString(gl, glutPlayer, "waiting PC!", 0.25f, -0.1f);

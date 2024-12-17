@@ -9,18 +9,20 @@ import java.util.Collections;
 import java.util.List;
 
 import static Game.Two_Players_Mode.*;
+
 public class TwoPlayers implements Player_Template {
     Obj obj = new Obj();
     private int[] ChickenPositions;
-    private boolean isCollision, restart;
+    private boolean isCollision, restart, timer, scoreSaved;
     private int score, level, totalScore, maxHealth, currHealth;
     private float xEgg, yEgg, eggSpeed, xBasket, yBasket;
     List<List<Float>> list = new ArrayList<>(Collections.singletonList(new ArrayList<>(Arrays.asList(xEgg, yEgg))));
 
-    public TwoPlayers(int[] ChickenPositions, boolean isCollision, boolean restart, int score, int level, int totalScore, int maxHealth, int currHealth, float xEgg, float yEgg, float eggSpeed, float xBasket, float yBasket) {
+    public TwoPlayers(int[] ChickenPositions, boolean isCollision, boolean restart, boolean timer, boolean scoreSaved, int score, int level, int totalScore, int maxHealth, int currHealth, float xEgg, float yEgg, float eggSpeed, float xBasket, float yBasket) {
         this.ChickenPositions = ChickenPositions;
         this.isCollision = isCollision;
         this.restart = restart;
+        this.timer = timer;
         this.score = score;
         this.level = level;
         this.totalScore = totalScore;
@@ -31,6 +33,7 @@ public class TwoPlayers implements Player_Template {
         this.eggSpeed = eggSpeed;
         this.xBasket = xBasket;
         this.yBasket = yBasket;
+        this.scoreSaved = scoreSaved;
     }
 
     // Setter methods
@@ -44,6 +47,14 @@ public class TwoPlayers implements Player_Template {
 
     public void setRestart(boolean restart) {
         this.restart = restart;
+    }
+
+    public void setTimer(boolean timer) {
+        this.timer = timer;
+    }
+
+    public void setScoreSaved(boolean scoreSaved) {
+        this.scoreSaved = scoreSaved;
     }
 
     public void setScore(int score) {
@@ -103,6 +114,14 @@ public class TwoPlayers implements Player_Template {
         return restart;
     }
 
+    public boolean getTimer() {
+        return timer;
+    }
+
+    public boolean getSavedscore() {
+        return scoreSaved;
+    }
+
     public int getScore() {
         return score;
     }
@@ -158,8 +177,10 @@ public class TwoPlayers implements Player_Template {
         currHealth = 5;
         isCollision = false;
         score = 0;
+        totalScore = 0;
         eggSpeed = 0.75f;
         level = 1;
+        scoreSaved = false;
     }
 
     public void drawGame(GL gl, GLUT glut, boolean isLeft) {
@@ -202,13 +223,6 @@ public class TwoPlayers implements Player_Template {
             }
         }
 
-        if (!spaceClicked && isLeft) {
-            seconds += 1 / 30f;
-            if (seconds >= 60) {
-                minutes++;
-                seconds = 0;
-            }
-        }
 
         for (int i : ChickenPositions) {
             obj.drawSprite(gl, i, 80, 0, 1.0f, 1.0f);
@@ -238,9 +252,9 @@ public class TwoPlayers implements Player_Template {
             obj.drawString(gl, glutRight, "Score: " + score, 0.25f, 0.82f);
             obj.drawString(gl, glutRight, "Level: " + level, 0.6f, 0.82f);
         }
-        if (isLeft) {
-            obj.drawString(gl, glut, "Time " + (int) minutes + " : " + (int) seconds, -0.1f, 0.85f);
-        }
+
+        obj.drawString(gl, glut, "Time " + (int) minutes + " : " + (int) seconds, -0.1f, 0.85f);
+
     }
 
     public void goNextLevel() {
