@@ -6,8 +6,17 @@ import com.sun.opengl.util.GLUT;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class One_Player_Mode extends Anim_Listener {
     // variables for the game
@@ -20,6 +29,8 @@ public class One_Player_Mode extends Anim_Listener {
     int[] chickenPositions = {10, 40, 70};
     float start = chickenPositions[(int) (Math.random() * random)] + 2;
     OnePlayer player = new OnePlayer(chickenPositions, false, false, 0, 1, 0, 5, 5, start, 78, 0.75f, maxWidth / 2.0f, 5.0f);
+    String userName = "";
+    boolean savedScore = false;
 
     public One_Player_Mode(int level) {
         if (level == 1) {
@@ -31,6 +42,63 @@ public class One_Player_Mode extends Anim_Listener {
             player.goNextLevel();
         }
     }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void getHighScores() {
+        List<Scores> vec = new ArrayList<Scores>();
+        try {
+            File file = new File("src/assets/scores.txt");
+            Scanner scanner = new Scanner(file);
+            StringBuilder curUserName = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.isEmpty()) {
+                    break;
+                }
+                String[] split = line.split(" ", 2);
+                int score = 0;
+                if (split.length == 2) {
+                    try {
+                        score = Integer.parseInt(split[1].trim());
+                        curUserName.setLength(0);
+                        curUserName.append(split[0].trim());
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                }
+                vec.add(new Scores(curUserName.toString().trim(), score));
+            }
+            scanner.close();
+
+            vec.add(new Scores(this.userName, this.player.getTotalScore() * 10));
+
+
+            vec.sort((user1, user2) -> user1.getScore() < user2.getScore() ? 1 : user1.getScore() > user2.getScore() ? -1 : 0);
+
+
+            try (FileWriter myWriter = new FileWriter("src/assets/scores.txt")) {
+                int num = 1;
+                for (Scores i : vec) {
+                    myWriter.write(i.name + " " + i.score + "\n");
+                    num++;
+                    if (num == 21) {
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error writing to file: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException err) {
+            System.out.println("Scores file not found: " + err.getMessage());
+            err.printStackTrace();
+        }
+    }
+
 
     @Override
     public void init(GLAutoDrawable gld) {
@@ -51,6 +119,7 @@ public class One_Player_Mode extends Anim_Listener {
         }
     }
 
+
     @Override
     public void display(GLAutoDrawable gld) {
         GL gl = gld.getGL();
@@ -66,9 +135,19 @@ public class One_Player_Mode extends Anim_Listener {
             if ((player.getLevel() < 3)) {
                 obj.drawString(gl, glut, "You Win press n if you want to play next level", -0.5f, 0f);
             } else {
+                if (!savedScore) {
+                    savedScore = true;
+                    System.out.println(player.getScore());
+                    getHighScores();
+                }
                 obj.drawString(gl, glut, "Congratulations, You Win all levels press R to start again", -0.5f, 0f);
             }
         } else {
+            if (!savedScore) {
+                savedScore = true;
+                System.out.println(player.getScore());
+                getHighScores();
+            }
             obj.drawString(gl, glut, "Game Over, Sorry for your lose press R to start again", -0.5f, 0f);
         }
     }

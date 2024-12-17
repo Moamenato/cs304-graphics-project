@@ -7,8 +7,14 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
+import java.util.Scanner;
 
 public class AI_Player_Mode extends Anim_Listener {
     // global variables for the game
@@ -30,6 +36,65 @@ public class AI_Player_Mode extends Anim_Listener {
     int rightStart = chickenRight[(int) (Math.random() * 3)] + 2;
     AIPlayer PC = new AIPlayer(chickenLeft, false, false, 0, 1, 0, 5, 5, leftStart, 78, 0.75f, newMaxWidth / 2.0f, 5.0f);
     AIPlayer player = new AIPlayer(chickenRight, false, false, 0, 1, 0, 5, 5, rightStart, 78, 0.75f, newMaxWidth + newMaxWidth / 2.0f, 5.0f);
+    boolean savedScore = false;
+    String playerName = "";
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+
+    public void getHighScores() {
+        List<Scores> vec = new ArrayList<Scores>();
+        try {
+            File file = new File("src/assets/scores.txt");
+            Scanner scanner = new Scanner(file);
+            StringBuilder curUserName = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.isEmpty()) {
+                    break;
+                }
+                String[] split = line.split(" ", 2);
+                int score = 0;
+                if (split.length == 2) {
+                    try {
+                        score = Integer.parseInt(split[1].trim());
+                        curUserName.setLength(0);
+                        curUserName.append(split[0].trim());
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                }
+                vec.add(new Scores(curUserName.toString().trim(), score));
+            }
+            scanner.close();
+
+            vec.add(new Scores(this.playerName, this.player.getScore()));
+
+
+            vec.sort((user1, user2) -> user1.getScore() < user2.getScore() ? 1 : user1.getScore() > user2.getScore() ? -1 : 0);
+
+
+            try (FileWriter myWriter = new FileWriter("src/assets/scores.txt")) {
+                int num = 1;
+                for (Scores i : vec) {
+                    myWriter.write(i.name + " " + i.score + "\n");
+                    num++;
+                    if (num == 21) {
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error writing to file: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException err) {
+            System.out.println("Scores file not found: " + err.getMessage());
+            err.printStackTrace();
+        }
+    }
 
     public AI_Player_Mode(int level) {
         if (level == 1) {
@@ -94,6 +159,12 @@ public class AI_Player_Mode extends Anim_Listener {
                 }
                 restartGame = true;
             } else if (PC.getCurrHealth() <= 0 || player.getCurrHealth() <= 0) {
+                if (!savedScore) {
+                    savedScore = true;
+                    System.out.println(this.player.getScore());
+                    System.out.println("here");
+                    getHighScores();
+                }
                 if (player.getCurrHealth() <= 0) {
                     obj.drawString(gl, glutPlayer, "Game Is Over!", 0.25f, 0.0f);
                     obj.drawString(gl, glutPlayer, "waiting PC!", 0.25f, -0.1f);

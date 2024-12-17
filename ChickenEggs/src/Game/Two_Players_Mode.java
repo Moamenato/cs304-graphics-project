@@ -7,8 +7,14 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
+import java.util.Scanner;
 
 public class Two_Players_Mode extends Anim_Listener {
     // global variables for the game
@@ -45,6 +51,70 @@ public class Two_Players_Mode extends Anim_Listener {
             right.goNextLevel();
         }
     }
+
+    String player1Name, player2Name;
+
+    public void setPlayer1Name(String player1Name) {
+        this.player1Name = player1Name;
+    }
+
+    public void setPlayer2Name(String player2Name) {
+        this.player2Name = player2Name;
+    }
+
+    public void getHighScores() {
+        List<Scores> vec = new ArrayList<Scores>();
+        try {
+            File file = new File("src/assets/scores.txt");
+            Scanner scanner = new Scanner(file);
+            StringBuilder curUserName = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.isEmpty()) {
+                    break;
+                }
+                String[] split = line.split(" ", 2);
+                int score = 0;
+                if (split.length == 2) {
+                    try {
+                        score = Integer.parseInt(split[1].trim());
+                        curUserName.setLength(0);
+                        curUserName.append(split[0].trim());
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                }
+                vec.add(new Scores(curUserName.toString().trim(), score));
+            }
+            scanner.close();
+
+            vec.add(new Scores(this.player1Name, this.left.getTotalScore()*10));
+            vec.add(new Scores(this.player2Name, this.right.getTotalScore()*10));
+
+
+            vec.sort((user1, user2) -> user1.getScore() < user2.getScore() ? 1 : user1.getScore() > user2.getScore() ? -1 : 0);
+
+
+            try (FileWriter myWriter = new FileWriter("src/assets/scores.txt")) {
+                int num = 1;
+                for (Scores i : vec) {
+                    myWriter.write(i.name + " " + i.score + "\n");
+                    num++;
+                    if (num == 21) {
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error writing to file: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException err) {
+            System.out.println("Scores file not found: " + err.getMessage());
+            err.printStackTrace();
+        }
+    }
+
     @Override
     public void init(GLAutoDrawable gld) {
         GL gl = gld.getGL();
@@ -63,6 +133,8 @@ public class Two_Players_Mode extends Anim_Listener {
             }
         }
     }
+
+    boolean scoreSaved = false;
 
     @Override
     public void display(GLAutoDrawable gld) {
@@ -91,7 +163,13 @@ public class Two_Players_Mode extends Anim_Listener {
                     whoWin = -1;
                 }
                 restartGame = true;
-            } else if (left.getCurrHealth() <= 0 || right.getCurrHealth() <= 0 ) {
+            } else if (left.getCurrHealth() <= 0 || right.getCurrHealth() <= 0) {
+                if (!scoreSaved) {
+                    scoreSaved = true;
+                    System.out.println(left.getTotalScore());
+                    System.out.println(right.getTotalScore());
+                    getHighScores();
+                }
                 if (left.getCurrHealth() <= 0) {
                     obj.drawString(gl, glutLeft, "Game Over!", -0.75f, 0.0f);
                     obj.drawString(gl, glutLeft, "waiting right player!", -0.75f, -0.1f);
@@ -123,7 +201,7 @@ public class Two_Players_Mode extends Anim_Listener {
                         left.drawGame(gl, glutLeft, true);
                     }
                 }
-            }else if (right.getScore() == 100 || left.getScore() == 100){
+            } else if (right.getScore() == 100 || left.getScore() == 100) {
                 if (right.getScore() == 100) {
                     if ((right.getLevel() < 3)) {
                         obj.drawString(gl, glutRight, "You Win This Level!", 0.25f, 0.0f);
@@ -150,8 +228,7 @@ public class Two_Players_Mode extends Anim_Listener {
                     left.drawGame(gl, glutLeft, true);
                 }
 
-            }
-            else {
+            } else {
                 left.drawGame(gl, glutLeft, true);
                 right.drawGame(gl, glutRight, false);
             }
@@ -207,6 +284,7 @@ public class Two_Players_Mode extends Anim_Listener {
                 right.goNextLevel();
             }
             if (isKeyPressed(KeyEvent.VK_R) && restartGame) {
+
                 restartGame = false;
                 whoWin = 0;
                 minutes = 0;
